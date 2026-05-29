@@ -102,7 +102,15 @@ const navItems = [
 
   @keyframes nav-shadown {
     to {
-      @apply shadow-lg ring-1 backdrop-blur dark:bg-gray-800/90 bg-white/50 ring-white/10;
+      box-shadow:
+        0 10px 15px -3px rgb(0 0 0 / 0.1),
+        0 4px 6px -4px rgb(0 0 0 / 0.1),
+        0 0 0 1px rgb(255 255 255 / 0.1);
+      backdrop-filter: blur(8px);
+      background-color: rgb(255 255 255 / 0.5);
     }
+  }
+  :global(.dark) nav {
+    --nav-bg: rgb(31 41 55 / 0.9); /* dark:bg-gray-800/90 */
   }
 </style>
