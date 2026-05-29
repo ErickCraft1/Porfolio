@@ -1,0 +1,96 @@
+---
+import AstroIcon from "./icons/AstroIcon.astro";
+import Github from "./icons/Github.astro";
+import Tailwind from "./icons/Tailwind.astro";
+import Link from "./Link.astro";
+import LinkBtn from "./LinkBtn.astro";
+
+const TAGS = {
+  ASTRO: {
+    name: "Astro",
+    class: "bg-black text-white",
+    icon: AstroIcon,
+  },
+  TAILWIND: {
+    name: "Tailwind CSS",
+    class: "bg-[#003159] text-white",
+    icon: Tailwind,
+  },
+  //   MARKDOWN: {
+  //     name: "Markdown",
+  //     class: "bg-[#333333] text-white",
+  //     icon: MarkdownIcon,
+  //   },
+};
+
+const EXERCISE = {
+  title: "Logica de programación con Java - Ejercicios resueltos",
+  description:
+    "Ejercicios resueltos de lógica de programación utilizando Java. Estos ejercicios están en escalados y cubbren temas como estructuras de control, funciones, arreglos y más. Perfectos para principiantes que buscan mejorar sus habilidades de programación. Cada ejercicio incluye una explicación detallada y el código fuente para facilitar el aprendizaje. Creado desde cero con Astro, Tailwind CSS y Markdown.",
+  link: "https://erickdev.com/exercise",
+  github: "https://github.com/ErickCraft1/Practica_Java",
+  image: "/projects/java.webp",
+  tags: [TAGS.ASTRO, TAGS.TAILWIND /*TAGS.MARKDOWN*/],
+};
+---
+
+<div class="flex flex-col gap-y-16">
+  <article
+    class="flex flex-col spcae-0 space-y-8 group md:space-x-8 md:space-y-0 w-full items-center"
+  >
+    <div class="w-11/12 pb-5">
+      <div
+        class="relative flex flex-col items-center col-span-6 row-span-5 gap-8 transition duration-500 ease-in-out transform shadow-xl oveflow-clip rounded-xl sm:rounded-xl md:group-hover:-translate-y-1 md:group-hover:shadow-2xl lg:border lg:border-gray-800 lg:hover:border-gray-700 lg:hover:bg-gray-800/50"
+      >
+        <img
+          alt="Logica de programación con Java - Ejercicios resueltos"
+          class="object-cover object-top w-full h-56 transition duration-500 sm:h-full md:scale-110 md:group-hover:scale-105"
+          loading="lazy"
+          src={EXERCISE.image}
+        />
+      </div>
+    </div>
+    <div class="w-full">
+      <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
+        {EXERCISE.title}
+      </h3>
+      <div class="flex flex-wrap mt-2">
+        <ul class="flex flex-row mb-2 gap-x-2">
+          {
+            EXERCISE.tags.map((tag) => (
+              <li>
+                <span
+                  class={`flex gap-x-2 rounded-full text-xs ${tag.class} py-1 px-2`}
+                >
+                  <tag.icon class="size-4" />
+                  {tag.name}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">
+          {EXERCISE.description}
+        </p>
+        <footer class="flex items-end justify-start mt-4 gap-x-4">
+          {
+            EXERCISE.github && (
+              <LinkBtn href={EXERCISE.github}>
+                <Github class="size-6" />
+                code
+              </LinkBtn>
+            )
+          }
+          {
+            EXERCISE.link && (
+              <LinkBtn href={EXERCISE.link}>
+                <Link class="size-4" />
+                Preview
+              </LinkBtn>
+            )
+          }
+        </footer>
+      </div>
+    </div>
+  </article>
+</div>
