@@ -1,4 +1,3 @@
----
 export const data = [
   {
     name: "Html",
@@ -22,4 +21,3 @@ export const data = [
     name: "Tailwind",
   },
 ];
----
