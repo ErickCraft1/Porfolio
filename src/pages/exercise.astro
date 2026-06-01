@@ -1,1 +1,13 @@
-<p>Dejame SI?! :v</p>
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import { navItemsExercise } from "../utils/NavItems";
+---
+
+<Layout
+  title="Ejercicios de programación resueltos - erickdev"
+  description="Ejercicios resueltos de lógica de programación utilizando Java."
+>
+  <Header navItems={navItemsExercise} />
+  hola
+</Layout>

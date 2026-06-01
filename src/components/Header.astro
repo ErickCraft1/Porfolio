@@ -1,33 +1,13 @@
 ---
 import ThemeToogle from "./ThemeToogle.astro";
 
-const navItems = [
-  {
-    title: "Experiencia",
-    label: "experiencia",
-    url: "/#experiencia",
-  },
-  {
-    title: "Proyectos",
-    label: "proyectos",
-    url: "/#proyectos",
-  },
-  {
-    title: "Sobre mí",
-    label: "sobre-mi",
-    url: "/#sobre-mi",
-  },
-  {
-    title: "Ejercicios",
-    label: "ejercicios",
-    url: "/#ejercicios",
-  },
-  {
-    title: "Contacto",
-    label: "contacto",
-    url: "mailto:hola@erickdev.com",
-  },
-];
+import type { NavItem } from "../utils/NavItems";
+
+interface Props {
+  navItems: NavItem[];
+}
+
+const { navItems } = Astro.props;
 ---
 
 <header
@@ -39,10 +19,11 @@ const navItems = [
     {
       navItems.map((link) => (
         <a
-          class="relative block px-2 py-2 text-xs md:text-base transition hover:text-yellow-500 dark:text-white-400"
+          class="relative inline-flex items-center gap-1 px-2 py-2 text-xs md:text-base transition hover:text-yellow-500 dark:text-white-400"
           aria-label={link.label}
           href={link.url}
         >
+          {link.icon && <link.icon />}
           {link.title}
         </a>
       ))
