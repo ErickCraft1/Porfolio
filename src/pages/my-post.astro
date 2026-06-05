@@ -1,0 +1,12 @@
+---
+import * as post1 from "./post/post1.md";
+const { Content } = post1;
+const posts = Object.values(import.meta.glob("./post/*.md", { eager: true }));
+---
+
+<p>{post1.frontmatter.title}</p>
+<p>{post1.frontmatter.subtitle}</p>
+<p>{post1.frontmatter.number}</p>
+<p>{post1.frontmatter.complexity}</p>
+
+<Content />

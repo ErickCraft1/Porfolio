@@ -5,9 +5,6 @@ import Tailwind from "./icons/Tailwind.astro";
 import Link from "./Link.astro";
 import LinkBtn from "./LinkBtn.astro";
 
-const PORT =
-  import.meta.env.PORT || "http://127.0.0.1:4321" || "https://erickdev.com";
-
 const TAGS = {
   ASTRO: {
     name: "Astro",
@@ -30,7 +27,7 @@ const EXERCISE = {
   title: "Logica de programación con Java - Ejercicios resueltos",
   description:
     "Ejercicios resueltos de lógica de programación utilizando Java. Estos ejercicios están en escalados y cubbren temas como estructuras de control, funciones, arreglos y más. Perfectos para principiantes que buscan mejorar sus habilidades de programación. Cada ejercicio incluye una explicación detallada y el código fuente para facilitar el aprendizaje. Creado desde cero con Astro, Tailwind CSS y Markdown.",
-  link: PORT + "/exercise",
+  link: "/exercise",
   github: "https://github.com/ErickCraft1/Practica_Java",
   image: "/projects/java.webp",
   tags: [TAGS.ASTRO, TAGS.TAILWIND /*TAGS.MARKDOWN*/],
