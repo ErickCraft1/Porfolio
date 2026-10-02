@@ -45,9 +45,5 @@ export const navItemsExercise: NavItem[] = [
         title: "Java",
         label: "java",
         url: "/#java",
-    }, {
-        title: "SQLite",
-        label: "sqlite",
-        url: "/#sqlite",
     }
 ]

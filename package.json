@@ -10,16 +10,23 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "tester": "node --env-file=.env src/pages/api/get-exercise.ts"
   },
   "dependencies": {
+    "@astrojs/check": "0.9.10",
     "@astrojs/cloudflare": "13.6.0",
     "@fontsource-variable/onest": "5.0.4",
-    "@tailwindcss/vite": "^4.3.0",
+    "@octokit/core": "7.0.8",
+    "@tailwindcss/vite": "4.3.0",
     "astro": "6.4.2",
-    "tailwindcss": "^4.3.0"
+    "tailwindcss": "4.3.0"
   },
   "devDependencies": {
-    "wrangler": "^4.95.0"
+    "@cloudflare/workers-types": "5.20261001.1",
+    "@types/node": "26.4.1",
+    "tsx": "4.23.13",
+    "typescript": "6.0.3",
+    "wrangler": "4.95.0"
   }
 }

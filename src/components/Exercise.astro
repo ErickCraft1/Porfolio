@@ -24,9 +24,9 @@ const TAGS = {
 };
 
 const EXERCISE = {
-  title: "Logica de programación con Java - Ejercicios resueltos",
+  title: "Logica de programación - Ejercicios resueltos",
   description:
-    "Ejercicios resueltos de lógica de programación utilizando Java. Estos ejercicios están en escalados y cubbren temas como estructuras de control, funciones, arreglos y más. Perfectos para principiantes que buscan mejorar sus habilidades de programación. Cada ejercicio incluye una explicación detallada y el código fuente para facilitar el aprendizaje. Creado desde cero con Astro, Tailwind CSS y Markdown.",
+    "Ejercicios resueltos de lógica de programación utilizando diversos lenguajes de programación. Estos ejercicios están en escalados y cubren temas como estructuras de control, funciones, arreglos y más. Cada ejercicio incluye una explicación detallada y el código fuente para facilitar el aprendizaje. Creado desde cero con Astro, Tailwind CSS y Markdown.",
   link: "/exercise",
   github: "https://github.com/ErickCraft1/Practica_Java",
   image: "/projects/java.webp",
@@ -43,7 +43,7 @@ const EXERCISE = {
         class="relative flex flex-col items-center col-span-6 row-span-5 gap-8 transition duration-500 ease-in-out transform shadow-xl oveflow-clip rounded-xl sm:rounded-xl md:group-hover:-translate-y-1 md:group-hover:shadow-2xl lg:border lg:border-gray-800 lg:hover:border-gray-700 lg:hover:bg-gray-800/50"
       >
         <img
-          alt="Logica de programación con Java - Ejercicios resueltos"
+          alt="Logica de programación - Ejercicios resueltos"
           class="object-cover object-top w-full h-56 transition duration-500 sm:h-full md:scale-110 md:group-hover:scale-105"
           loading="lazy"
           src={EXERCISE.image}
@@ -77,7 +77,7 @@ const EXERCISE = {
             EXERCISE.github && (
               <LinkBtn href={EXERCISE.github}>
                 <Github class="size-6" />
-                code
+                repositorio
               </LinkBtn>
             )
           }
@@ -85,7 +85,7 @@ const EXERCISE = {
             EXERCISE.link && (
               <LinkBtn href={EXERCISE.link}>
                 <Link class="size-4" />
-                Preview
+                Contenido
               </LinkBtn>
             )
           }
