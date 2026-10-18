@@ -1,5 +1,5 @@
 import type { ExerciseEntries } from "../../utils/general.ts";
-import { getDirectoryContents, getExercise, getFileContent } from "./get-exercise.ts";
+import { getDirectoryContents, getExercise } from "./get-exercise.ts";
 const data = ["ErickCraft1", "Practica_Java"];
 // Get the top-level practice directories from GitHub.
 // Obtiene de GitHub las carpetas principales de prácticas.
@@ -33,13 +33,3 @@ for (const entry of exerciseEntries) {
     );
     subDirectories.push(...children)
 }
-
-// This is a temporary fixed-file test; the UI will later provide this path.
-// Esta es una prueba temporal con un archivo fijo; después la UI proporcionará la ruta.
-const content = await getFileContent(
-    data[0],
-    data[1],
-    "src/practice/bucles/exercise1.java"
-);
-
-// console.log(content);

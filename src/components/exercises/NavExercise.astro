@@ -1,0 +1,224 @@
+---
+import { directories, exerciseEntries, subDirectories } from "../../pages/api/create-exercise";
+
+
+// SVG icon for the toggle button
+import CaretDown from "../../../public/svg/caretDown.svg";
+import Search from "../../../public/svg/search.svg";
+---
+
+<nav class="flex flex-col w-xs border-r h-dvh">
+      <!-- Navigation for the exercise explorer -->
+      <!-- Navegación para el explorador de ejercicios -->
+      <div class="m-4 pb-4 mb-0 border-b shrink-0 flex flex-col gap-2">
+        <p>EXPLORADOR</p>
+        <figure class="flex items-center gap-2">
+          <Search />
+          <!-- Search input used to filter exercises without reloading the page. -->
+          <!-- Campo de búsqueda para filtrar ejercicios sin recargar la página. -->
+          <input id="exercise-search" name="search" type="search" placeholder="Buscar ejercicio..." class="text-sm w-full"/>
+        </figure>
+      </div>
+
+      <div class="flex-1 min-h-0 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-smooth">
+        <ul>
+          <!-- Render the exercise categories and their entries. -->
+          <!-- Renderiza las categorías de ejercicios y sus elementos. -->
+          {
+            directories.map((directory) => (
+              <li class="category-item">
+                <!-- Show the category name and its direct children. -->
+                <!-- Muestra el nombre de la categoría y sus elementos directos. -->
+                <div class="flex items-center gap-2">
+                  <span>{directory.name}</span>
+
+                  {/* Toggle button for expanding or collapsing the category. */}
+                  {/* Botón para expandir o contraer la categoría. */}
+                  <button type="button" aria-controls={`content-${directory.name}`} aria-expanded="false" class="toggle cursor-pointer">
+                    <CaretDown class="rt"/>
+                  </button>
+                </div>
+
+                {/* Category content controlled by the toggle button above. */}
+                {/* Contenido de la categoría controlado por el botón anterior. */}
+                <ul id={`content-${directory.name}`} hidden class="flex flex-col gap-y-2 pl-4 content">
+                  {exerciseEntries
+                    .filter((entry) => entry.category === directory.name)
+                    .map((entry) => (
+                      <!-- Files become links; nested directories get their own toggle. -->
+                      <!-- Los archivos se convierten en enlaces; los directorios anidados tienen su propio toggle. -->
+                      <li class="exercise-item">
+                        {entry.type === "file" ? (
+                          <a
+                            class="exercise-link"
+                            href={`/exercise?path=${encodeURIComponent(entry.path)}`}
+                          >
+                            {entry.name}
+                          </a>
+                        ) : (
+                          <>
+                            <div class="flex items-center gap-2">
+                              <span>{entry.name}</span>
+                              <button type="button" aria-controls={`content-${entry.name}`} aria-expanded="false" class="toggle cursor-pointer">
+                                <CaretDown class="rt"/>
+                              </button>
+                            </div>
+                            <ul id={`content-${entry.name}`} class="flex flex-col gap-y-2 pl-4 content" hidden>
+                              {
+                                subDirectories
+                                  .filter((subDir) => subDir.category === entry.name)
+                                  .map((subDir) => (
+                                    <li class="exercise-item">
+                                      <a
+                                        class="exercise-link"
+                                        href={`/exercise?path=${encodeURIComponent(
+                                          subDir.path
+                                        )}`}
+                                      >
+                                        {subDir.name}
+                                      </a>
+                                    </li>
+                                  ))
+                              }
+                            </ul>
+                          </>
+                        )}
+                      </li>
+                    ))}
+                </ul>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </nav>
+
+    <script>
+      // Attach click handlers to every category toggle after each Astro navigation.
+      // Asigna manejadores de clic a cada toggle después de cada navegación de Astro.
+      function initToggles(){
+        document
+          .querySelectorAll<HTMLButtonElement>(".toggle")
+          .forEach((toggle) => {
+            // Prevent registering the same handler more than once.
+            // Evita registrar el mismo manejador más de una vez.
+            if(toggle.dataset.initialized === "true") return;
+
+            toggle.dataset.initialized = "true";
+            
+            toggle.addEventListener("click", () => {
+              // Find the list controlled by this button.
+              // Busca la lista controlada por este botón.
+              const contentId = toggle.getAttribute("aria-controls");
+              const content = contentId
+                ? document.getElementById(contentId)
+                :null;
+
+              if(!content) return;
+
+              // Toggle visibility and keep the accessibility state synchronized.
+              // Alterna la visibilidad y mantiene sincronizado el estado de accesibilidad.
+              const isExpanded = 
+                toggle.getAttribute("aria-expanded") === "true";
+
+              content.hidden = isExpanded;
+              toggle.setAttribute("aria-expanded", String(!isExpanded));
+
+              toggle
+                .querySelector(".rt")
+                ?.classList.toggle("rotate-180", !isExpanded);
+            });
+          })
+      }
+
+      // Filter categories and exercises as the user types in the search field.
+      // Filtra las categorías y los ejercicios mientras el usuario escribe.
+      function initSearch() {
+        const searchInput =
+          document.querySelector<HTMLInputElement>("#exercise-search");
+        // Avoid duplicate input handlers after Astro replaces the page.
+        // Evita duplicar manejadores después de que Astro reemplace la página.
+        if(!searchInput || searchInput.dataset.initialized === "true") return;
+
+        searchInput.dataset.initialized = "true";
+
+        searchInput.addEventListener("input", () => {
+          // Normalize the query so the search is case-insensitive.
+          // Normaliza la consulta para que la búsqueda ignore mayúsculas y minúsculas.
+          const searchTerm = searchInput.value.toLowerCase();
+
+          document
+            .querySelectorAll<HTMLElement>(".category-item")
+            .forEach((category) => {
+              const categoryName =
+                category.querySelector(":scope > div span")?.textContent
+                  ?.toLowerCase() ?? "";
+              
+              const exerciseItems =
+                category.querySelectorAll<HTMLElement>(".exercise-item");
+              
+              let hasMatches = false;
+
+              exerciseItems.forEach((exercise) => {
+                // Include the entry name and nested exercise names in the match.
+                // Incluye el nombre del elemento y de sus ejercicios anidados en la coincidencia.
+                const exerciseName =
+                  exercise
+                    .querySelector(".exercise-link, :scope > div span")
+                    ?.textContent?.toLowerCase() ?? "";
+                
+                const subExerciseNames = Array.from(
+                  exercise.querySelectorAll(".exercise-link")
+                )
+                  .map((link) => link.textContent?.toLowerCase() ?? "")
+                  .join(" ");
+
+                const matches =
+                  searchTerm === "" ||
+                  categoryName.includes(searchTerm) ||
+                  exerciseName.includes(searchTerm) ||
+                  subExerciseNames.includes(searchTerm);
+
+                exercise.hidden = !matches;
+
+                if(matches) hasMatches = true;
+              });
+
+              // Hide categories that do not contain any matching exercise.
+              // Oculta las categorías que no contienen ejercicios coincidentes.
+              category.hidden = !hasMatches;
+
+              if(searchTerm !== "" && hasMatches) {
+                // Open matching categories so the results are immediately visible.
+                // Abre las categorías coincidentes para mostrar los resultados de inmediato.
+                const categoryContent =
+                  category.querySelector<HTMLElement>(":scope > .content");
+                
+                const categoryToggle =
+                  category.querySelector<HTMLButtonElement>(
+                    ":scope > div .toggle"
+                  );
+                
+                  if(categoryContent && categoryToggle) {
+                    categoryContent.hidden = false;
+                    categoryToggle.setAttribute("aria-expanded", "true");
+                    categoryToggle
+                      .querySelector(".rt")
+                      ?.classList.add("rotate-180");
+                  }
+              }
+            })
+        })
+      }
+
+      // Initialize all navigation behavior on the initial load and Astro transitions.
+      // Inicializa toda la navegación en la carga inicial y en las transiciones de Astro.
+      function initNavigation() {
+        initToggles();
+        initSearch();
+      }
+
+
+
+      document.addEventListener("astro:page-load", initNavigation);
+    </script>

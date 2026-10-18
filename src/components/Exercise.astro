@@ -2,6 +2,8 @@
 import AstroIcon from "./icons/AstroIcon.astro";
 import Github from "./icons/Github.astro";
 import Tailwind from "./icons/Tailwind.astro";
+import Workers from "./icons/Workers.astro";
+import Octokit from "./icons/Octokit.astro";
 import Link from "./Link.astro";
 import LinkBtn from "./LinkBtn.astro";
 
@@ -16,21 +18,26 @@ const TAGS = {
     class: "bg-[#003159] text-white",
     icon: Tailwind,
   },
-  //   MARKDOWN: {
-  //     name: "Markdown",
-  //     class: "bg-[#333333] text-white",
-  //     icon: MarkdownIcon,
-  //   },
+  WORKERS: {
+    name: "Workers",
+    class: "bg-orange-500 text-white",
+    icon: Workers,
+  },
+  OCTOKIT_CORE: {
+    name: "core",
+    class: "bg-gray-500 text-white",
+    icon: Octokit,
+  },
 };
 
 const EXERCISE = {
   title: "Logica de programación - Ejercicios resueltos",
   description:
-    "Ejercicios resueltos de lógica de programación utilizando diversos lenguajes de programación. Estos ejercicios están en escalados y cubren temas como estructuras de control, funciones, arreglos y más. Cada ejercicio incluye una explicación detallada y el código fuente para facilitar el aprendizaje. Creado desde cero con Astro, Tailwind CSS y Markdown.",
+    "Ejercicios resueltos de lógica de programación utilizando diversos lenguajes de programación. Estos ejercicios están en escalados y cubren temas como estructuras de control, funciones, arreglos y más. Cada ejercicio incluye una explicación detallada y el código fuente para facilitar el aprendizaje. Creado desde cero con Astro, Tailwind CSS, Workers y octokit/core.",
   link: "/exercise",
   github: "https://github.com/ErickCraft1/Practica_Java",
   image: "/projects/java.webp",
-  tags: [TAGS.ASTRO, TAGS.TAILWIND /*TAGS.MARKDOWN*/],
+  tags: [TAGS.ASTRO, TAGS.TAILWIND, TAGS.WORKERS, TAGS.OCTOKIT_CORE],
 };
 ---
 

@@ -54,7 +54,7 @@ const THEMES = ["Light", "Dark", "System"];
 </style>
 
 <script is:inline>
-  let remove = null;
+  // let remove = null;
   const themesMenu = document.getElementById("themes-menu");
 
   const getThemePreference = () => {
@@ -70,12 +70,15 @@ const THEMES = ["Light", "Dark", "System"];
   };
 
   const updateTheme = () => {
-    if (remove != null) {
-      remove();
-    }
+    // if (remove != null) {
+    //   remove();
+    // }
 
     const themePreference = getThemePreference();
-    const isDark = themePreference === "dark" || themePreference === "system";
+    const isDark =
+      themePreference === "dark" ||
+      (themePreference === "system" &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches);
 
     updateIcon(themePreference);
     document.documentElement.classList[isDark ? "add" : "remove"]("dark");
@@ -83,9 +86,12 @@ const THEMES = ["Light", "Dark", "System"];
 
   updateTheme();
 
-  document.addEventListener("click", () => themesMenu.classList.remove("open"));
+  document.addEventListener("click", () =>
+    themesMenu?.classList.remove("open"),
+  );
 
-  document.getElementById("theme-toggle-btn").addEventListener("click", (e) => {
+  const themeToggleBtn = document.getElementById("theme-toggle-btn");
+  themeToggleBtn?.addEventListener("click", (e) => {
     e.stopPropagation();
     const isClosed = !themesMenu.classList.contains("open");
     themesMenu.classList[isClosed ? "add" : "remove"]("open");

@@ -4,7 +4,28 @@ import Header from "../components/Header.astro";
 import { navItemsExercise } from "../utils/NavItems.ts";
 import SectionContainer from "../components/SectionContainer.astro";
 import { Code } from "astro:components";
-import { directories, exerciseEntries, subDirectories } from "./api/create-exercise.ts";
+import NavExercise from "../components/exercises/NavExercise.astro";
+
+// Import the function to fetch file content from the API
+import { exerciseEntries, subDirectories } from "./api/create-exercise";
+import { getFileContent } from "./api/get-exercise.ts";
+
+const owner = "ErickCraft1";
+const repo = "Practica_Java";
+
+// Use the selected path or fall back to the first available exercise.
+// Usa la ruta seleccionada o utiliza como alternativa el primer ejercicio disponible.
+const selectedPath = Astro.url.searchParams.get("path");
+
+const firstExercise =
+  exerciseEntries.find((entry) => entry.type === "file") ??
+  subDirectories.find((subDir) => subDir.type === "file");
+
+const path = selectedPath ?? firstExercise?.path;
+
+// Fetch the selected exercise content.
+// Obtiene el contenido del ejercicio seleccionado.
+const content = path ? await getFileContent(owner, repo, path) : "";
 
 // The page receives directory metadata and their direct child entries from the server.
 // La página recibe del servidor los metadatos de las carpetas y sus elementos directos.
@@ -16,60 +37,11 @@ import { directories, exerciseEntries, subDirectories } from "./api/create-exerc
 >
   <Header navItems={navItemsExercise} />
   <main class="scroll-m-20 w-full pt-16 pb-8 gap-10 flex flex-row">
-    <nav class="flex flex-col gap-y-2 p-8 w-xs pt-28">
-      <ul>
-        {
-          directories.map((directory) => (
-            <li>
-              <!-- Show the category name and then its direct children. -->
-              <!-- Muestra el nombre de la categoría y luego sus elementos directos. -->
-              {directory.name}
-              <ul class="flex flex-col gap-y-2 pl-4">
-                {exerciseEntries
-                  .filter((entry) => entry.category === directory.name)
-                  .map((entry) => (
-                    <li>
-                      <!-- Files become links; directories remain labels for now. -->
-                      <!-- Los archivos se convierten en enlaces; las carpetas siguen como etiquetas. -->
-                      {entry.type === "file" ? (
-                        <a
-                          href={`/exercise?path=${encodeURIComponent(entry.path)}`}
-                        >
-                          {entry.name}
-                        </a>
-                      ) : (
-                        <span>{entry.name}
-                        <ul class="flex flex-col gap-y-2 pl-4">
-                          {
-                            subDirectories
-                              .filter((subDir) => subDir.category === entry.name)
-                              .map((subDir) => (
-                                <li>
-                                  <a
-                                    href={`/exercise?path=${encodeURIComponent(
-                                      subDir.path
-                                    )}`}
-                                  >
-                                    {subDir.name}
-                                  </a>
-                                </li>
-                              ))
-                          }
-                        </ul>
-                        </span>
-                      )}
-                    </li>
-                  ))}
-              </ul>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
+    <NavExercise />
     <SectionContainer class="pb-8 md:pb-16 gap-20 flex flex-col">
       <h2>Ejercicios de programación resueltos</h2>
-      <p>hola</p>
-      <!-- <Code code={decodedContent} lang={"java"} /> -->
+      <!-- <p>{content}</p> -->
+      <Code code={content} lang={"java"} />
     </SectionContainer>
   </main>
 </Layout>
