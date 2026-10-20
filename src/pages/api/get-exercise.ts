@@ -1,10 +1,15 @@
-import { octokit } from "../../lib/github.ts";
+import { getGithubClient } from "../../lib/github.ts";
 import type { Directory, ExerciseEntries } from "../../utils/general.ts";
 
 
 // Obtiene las carpetas directamente dentro de la ruta indicada.
 // Gets the directories located directly inside the given path.
-async function getDirectoryContents(owner: string, repo: string, path: string): Promise<Directory[]> {
+async function getDirectoryContents(
+    owner: string,
+    repo: string,
+    path: string
+): Promise<Directory[]> {
+    const octokit = getGithubClient();
     const directories: { name: string; path: string }[] = [];
     const response = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
         owner: owner,
@@ -33,7 +38,12 @@ async function getDirectoryContents(owner: string, repo: string, path: string): 
 
 // Consulta el contenido directo de cada carpeta recibida.
 // Fetches the direct contents of every received directory.
-async function getExercise(owner: string, repo: string, directories: Directory[]): Promise<ExerciseEntries[]> {
+async function getExercise(
+    owner: string,
+    repo: string,
+    directories: Directory[]
+): Promise<ExerciseEntries[]> {
+    const octokit = getGithubClient();
     const exerciseEntries: ExerciseEntries[] = [];
     for (const directory of directories) {
         // directory.path permite entrar en carpetas como arrays/withBuildIn.
@@ -64,7 +74,12 @@ async function getExercise(owner: string, repo: string, directories: Directory[]
 
 // Obtiene y decodifica el contenido de un archivo concreto.
 // Fetches and decodes the content of one specific file.
-async function getFileContent(owner: string, repo: string, path: string): Promise<string> {
+async function getFileContent(
+    owner: string,
+    repo: string,
+    path: string
+): Promise<string> {
+    const octokit = getGithubClient();
     const response = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
         owner: owner,
         repo: repo,

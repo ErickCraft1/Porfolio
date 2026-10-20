@@ -1,35 +1,52 @@
-import type { ExerciseEntries } from "../../utils/general.ts";
+import { exerciseRepository } from "../../config/exercises.ts";
 import { getDirectoryContents, getExercise } from "./get-exercise.ts";
-const data = ["ErickCraft1", "Practica_Java"];
-// Get the top-level practice directories from GitHub.
-// Obtiene de GitHub las carpetas principales de prácticas.
-export const directories = await getDirectoryContents(
-    data[0],
-    data[1],
-    "src/practice"
-);
 
-// Get the entries contained directly inside each top-level directory.
-// Obtiene los elementos contenidos directamente en cada carpeta principal.
-export const exerciseEntries = await getExercise(
-    data[0],
-    data[1],
-    directories
-);
+const { owner, repo } = exerciseRepository;
 
-// Get the subdirectories of each exercise entry.
-// Obtiene las subcarpetas de cada entrada de ejercicio.
-export const subDirectories: ExerciseEntries[] = [];
-for (const entry of exerciseEntries) {
-    if (entry.type !== "dir") {
-        continue;
-    }
-    // If the entry is a directory, get its subdirectories.
-    // Si la entrada es una carpeta, obtén sus subcarpetas.
-    const children = await getExercise(
-        data[0],
-        data[1],
-        [entry]
+// Load all navigation data during the page request.
+// Carga todos los datos de navegación durante la solicitud de la página.
+export async function getExerciseNavigation() {
+    // Get the top-level practice directories.
+    // Obtiene los directorios principales de prácticas.
+    const directories = await getDirectoryContents(
+        owner,
+        repo,
+        "src/practice"
     );
-    subDirectories.push(...children)
+
+    // Get the direct entries inside each practice directory.
+    // Obtiene los elementos directos dentro de cada directorio de prácticas.
+    const exerciseEntries = await getExercise(
+        owner,
+        repo,
+        directories
+    );
+
+    // Only directories need another request for their children.
+    // Solo los directorios necesitan otra solicitud para obtener sus hijos.
+    const directoryEntries = exerciseEntries.filter(
+        (entry) => entry.type === "dir"
+    );
+
+    // Request the children of all nested directories concurrently.
+    // Solicita simultáneamente los elementos de todos los directorios anidados.
+    const nestedResults = await Promise.all(
+        directoryEntries.map((entry) =>
+            getExercise(
+                owner,
+                repo,
+                [entry]
+            )
+        )
+    );
+
+    // Flatten the grouped results into one list for the navigation component.
+    // Convierte los resultados agrupados en una lista para el componente de navegación.
+    const subDirectories = nestedResults.flat();
+
+    return {
+        directories,
+        exerciseEntries,
+        subDirectories
+    };
 }

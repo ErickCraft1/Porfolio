@@ -1,10 +1,17 @@
 ---
-import { directories, exerciseEntries, subDirectories } from "../../pages/api/create-exercise";
-
+import type{ Directory, ExerciseEntries } from "../../utils/general.ts";
 
 // SVG icon for the toggle button
 import CaretDown from "../../../public/svg/caretDown.svg";
 import Search from "../../../public/svg/search.svg";
+
+interface Props {
+  directories: Directory[];
+  exerciseEntries: ExerciseEntries[];
+  subDirectories: ExerciseEntries[];
+}
+
+const { directories, exerciseEntries, subDirectories } = Astro.props;
 ---
 
 <nav class="flex flex-col w-xs border-r h-dvh">

@@ -6,12 +6,18 @@ import SectionContainer from "../components/SectionContainer.astro";
 import { Code } from "astro:components";
 import NavExercise from "../components/exercises/NavExercise.astro";
 
-// Import the function to fetch file content from the API
-import { exerciseEntries, subDirectories } from "./api/create-exercise";
+// Load the page layout, navigation, and exercise data helpers.
+// Carga el layout, la navegación y los helpers de datos de ejercicios.
+import { exerciseRepository } from "../config/exercises.ts";
+import { getExerciseNavigation } from "./api/create-exercise";
 import { getFileContent } from "./api/get-exercise.ts";
 
-const owner = "ErickCraft1";
-const repo = "Practica_Java";
+const { owner, repo } = exerciseRepository;
+
+// Load the navigation data during the current request.
+// Carga los datos de navegación durante la solicitud actual.
+const { directories, exerciseEntries, subDirectories } =
+  await getExerciseNavigation();
 
 // Use the selected path or fall back to the first available exercise.
 // Usa la ruta seleccionada o utiliza como alternativa el primer ejercicio disponible.
@@ -21,14 +27,32 @@ const firstExercise =
   exerciseEntries.find((entry) => entry.type === "file") ??
   subDirectories.find((subDir) => subDir.type === "file");
 
+// Build the list of valid file paths before reading the requested file.
+// Construye la lista de rutas válidas antes de leer el archivo solicitado.
+const availablePaths = [
+  ...exerciseEntries,
+  ...subDirectories,
+]
+  .filter((entry) => entry.type === "file")
+  .map((entry) => entry.path);
+
+// Reject paths that do not belong to the exercise navigation.
+// Rechaza las rutas que no pertenecen a la navegación de ejercicios.
+if (selectedPath && !availablePaths.includes(selectedPath)) {
+  return new Response("Exercise not found", {
+    status: 404,
+  });
+}
+
+// Use the requested exercise or the first available one by default.
+// Usa el ejercicio solicitado o el primero disponible por defecto.
 const path = selectedPath ?? firstExercise?.path;
 
-// Fetch the selected exercise content.
-// Obtiene el contenido del ejercicio seleccionado.
-const content = path ? await getFileContent(owner, repo, path) : "";
-
-// The page receives directory metadata and their direct child entries from the server.
-// La página recibe del servidor los metadatos de las carpetas y sus elementos directos.
+// Fetch the validated exercise content from GitHub.
+// Obtiene desde GitHub el contenido del ejercicio validado.
+const content = path
+  ? await getFileContent(owner, repo, path)
+  : "";
 ---
 
 <Layout
@@ -37,7 +61,11 @@ const content = path ? await getFileContent(owner, repo, path) : "";
 >
   <Header navItems={navItemsExercise} />
   <main class="scroll-m-20 w-full pt-16 pb-8 gap-10 flex flex-row">
-    <NavExercise />
+    <NavExercise
+      directories={directories}
+      exerciseEntries={exerciseEntries}
+      subDirectories={subDirectories}
+    />
     <SectionContainer class="pb-8 md:pb-16 gap-20 flex flex-col">
       <h2>Ejercicios de programación resueltos</h2>
       <!-- <p>{content}</p> -->
