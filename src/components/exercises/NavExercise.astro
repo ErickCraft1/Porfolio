@@ -14,20 +14,20 @@ interface Props {
 const { directories, exerciseEntries, subDirectories } = Astro.props;
 ---
 
-<nav class="flex flex-col w-xs border-r h-dvh">
+<nav class="lg:flex-col w-xs flex items-end lg:items-start border-r lg:h-dvh ">
       <!-- Navigation for the exercise explorer -->
       <!-- Navegación para el explorador de ejercicios -->
       <div class="m-4 pb-4 mb-0 border-b shrink-0 flex flex-col gap-2">
-        <p>EXPLORADOR</p>
+        <p class="hidden lg:block">EXPLORADOR</p>
         <figure class="flex items-center gap-2">
           <Search />
           <!-- Search input used to filter exercises without reloading the page. -->
           <!-- Campo de búsqueda para filtrar ejercicios sin recargar la página. -->
-          <input id="exercise-search" name="search" type="search" placeholder="Buscar ejercicio..." class="text-sm w-full"/>
+          <input id="exercise-search" name="search" type="search" placeholder="exercise1.java" class="text-sm w-full focus:outline-none"/>
         </figure>
       </div>
 
-      <div class="flex-1 min-h-0 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-smooth">
+      <div class="flex-1 min-h-0 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-smooth hidden lg:block">
         <ul>
           <!-- Render the exercise categories and their entries. -->
           <!-- Renderiza las categorías de ejercicios y sus elementos. -->

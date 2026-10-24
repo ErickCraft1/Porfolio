@@ -29,10 +29,7 @@ const firstExercise =
 
 // Build the list of valid file paths before reading the requested file.
 // Construye la lista de rutas válidas antes de leer el archivo solicitado.
-const availablePaths = [
-  ...exerciseEntries,
-  ...subDirectories,
-]
+const availablePaths = [...exerciseEntries, ...subDirectories]
   .filter((entry) => entry.type === "file")
   .map((entry) => entry.path);
 
@@ -50,9 +47,7 @@ const path = selectedPath ?? firstExercise?.path;
 
 // Fetch the validated exercise content from GitHub.
 // Obtiene desde GitHub el contenido del ejercicio validado.
-const content = path
-  ? await getFileContent(owner, repo, path)
-  : "";
+const content = path ? await getFileContent(owner, repo, path) : "";
 ---
 
 <Layout
@@ -60,16 +55,26 @@ const content = path
   description="Ejercicios resueltos de lógica de programación utilizando Java."
 >
   <Header navItems={navItemsExercise} />
-  <main class="scroll-m-20 w-full pt-16 pb-8 gap-10 flex flex-row">
+  <main
+    class="scroll-m-20 w-full pt-16 pb-8 gap-5 flex items-end flex-col lg:flex-row"
+  >
     <NavExercise
       directories={directories}
       exerciseEntries={exerciseEntries}
       subDirectories={subDirectories}
     />
-    <SectionContainer class="pb-8 md:pb-16 gap-20 flex flex-col">
+    <div
+      class="pb-8 md:pb-16 gap-10 flex flex-col w-full items-center h-[95dvh]"
+    >
       <h2>Ejercicios de programación resueltos</h2>
-      <!-- <p>{content}</p> -->
-      <Code code={content} lang={"java"} />
-    </SectionContainer>
+      <SectionContainer>
+        <!-- <p>{content}</p> -->
+        <Code
+          code={content}
+          lang={"java"}
+          class="p-3 whitespace-pre p-[clamp(0.75rem,2vw,1.5rem)] text-[clamp(0.65rem,1.2vw,0.95rem)] leading-[1.6] sm:text-sm m-2"
+        />
+      </SectionContainer>
+    </div>
   </main>
 </Layout>
